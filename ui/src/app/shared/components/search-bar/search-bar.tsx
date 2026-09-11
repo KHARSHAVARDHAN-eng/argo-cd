@@ -43,7 +43,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({value, onChange, placeholde
         onChange(newValue);
     };
 
-    const regexInvalid = regexEnabled && isInvalidRegex(value);
+    const regexInvalid = regexEnabled && isInvalidRegex(localValue);
 
     const inputClassName = classNames('search-bar__input', {
         'search-bar__input--regex': regexEnabled && !regexInvalid,
@@ -106,11 +106,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({value, onChange, placeholde
         let effectiveFilter = autocomplete.filterSuggestions ?? true;
         if (regexEnabled) {
             effectiveFilter = false;
-            if (value) {
+            if (localValue) {
                 if (regexInvalid) {
                     effectiveItems = [];
                 } else {
-                    const re = new RegExp(value);
+                    const re = new RegExp(localValue);
                     effectiveItems = normalizedItems.filter(item => re.test(item.value));
                 }
             }
@@ -142,14 +142,14 @@ export const SearchBar: React.FC<SearchBarProps> = ({value, onChange, placeholde
                             placeholder={placeholder}
                         />
                         <div className='keyboard-hint'>/</div>
-                        {value && <i className='fa fa-times' onClick={() => handleChange('')} style={{cursor: 'pointer', marginLeft: '5px'}} />}
+                        {localValue && <i className='fa fa-times' onClick={() => handleChange('')} style={{cursor: 'pointer', marginLeft: '5px'}} />}
                     </div>
                 )}
                 wrapperProps={{className: 'search-bar__wrapper', style: {flexGrow: 0}}}
                 renderItem={autocomplete.renderItem || (item => item.label)}
                 onSelect={val => autocomplete.onSelect(val)}
                 onChange={e => handleChange(e.target.value)}
-                value={value}
+                value={localValue}
                 items={effectiveItems}
             />
         );
